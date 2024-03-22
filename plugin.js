@@ -9,10 +9,6 @@ function run() {
     let apiUrl = 'https://openexchangerates.org/api/';
 
     // Determine the type of request and construct the appropriate API URL
-    if (!inputData.requestType && inputData.app_id){
-      apiUrl += `latest.json?app_id=${inputData.app_id}`;
-    }
-    else{
     switch (inputData.requestType) {
       case 'currencies':
         apiUrl += 'currencies.json';
@@ -48,11 +44,24 @@ function run() {
         if (inputData.symbols) apiUrl += `&symbols=${inputData.symbols}`;
         if (inputData.prettyprint) apiUrl += `&prettyprint=${inputData.prettyprint}`;
         break;
-
+      
+      case 'usage':
+        if (!inputData.app_id) {
+          Host.outputString("App ID is required for usage statistics requests.");
+          throw new Error("App ID is required for usage statistics requests.");
+        }
+        apiUrl += `usage.json?app_id=${inputData.app_id}`;
+        if (inputData.hasOwnProperty('prettyprint')) {
+          apiUrl += `&prettyprint=${inputData.prettyprint}`;
+        }
+        break;
+      case 'latest':
       default:
-        Host.outputString("Invalid request type.");
-        throw new Error("Invalid request type.");
-    }
+        apiUrl += 'latest.json';
+        if (inputData.base) params.push(`base=${inputData.base}`);
+        if (inputData.symbols) params.push(`symbols=${inputData.symbols}`);
+        if (inputData.prettyprint) params.push(`prettyprint=${inputData.prettyprint}`);
+        if (inputData.show_alternative) params.push(`show_alternative=${inputData.show_alternative}`);
     }
     // Define the request object for all endpoints
     const request = {
