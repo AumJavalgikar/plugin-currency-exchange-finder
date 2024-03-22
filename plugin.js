@@ -9,6 +9,9 @@ function run() {
     let apiUrl = 'https://openexchangerates.org/api/';
 
     // Determine the type of request and construct the appropriate API URL
+    if (!inputData.requestType && inputData.app_id){
+      `latest?app_id=${inputData.app_id}`;
+    }
     switch (inputData.requestType) {
       case 'currencies':
         apiUrl += 'currencies.json';
