@@ -1,52 +1,44 @@
-# OpenExchangeRates API Integration
+# OpenExchangeRates API Integration Guide
+
 ## Overview
-This guide provides step-by-step instructions for integrating the OpenExchangeRates API into your application to retrieve real-time currency exchange rate information. Utilizing the OpenExchangeRates API, you can access reliable and up-to-date exchange rates for over 170 currencies worldwide. This integration involves generating a WebAssembly (WASM) plugin using Extism.
 
-# Prerequisites
-Before you begin, you will need to secure an API key from OpenExchangeRates. Register for an API key here. The free plan offers up to 1,000 requests per month, which is sufficient for basic usage.
+This guide outlines the process for integrating the OpenExchangeRates API into your agents. By leveraging this API, you gain access to accurate and up-to-date exchange rate information for over 170 currencies globally. The integration process includes generating a WebAssembly (WASM) plugin with Extism.
 
-# Parameters
-To make a request to the OpenExchangeRates API, you need to specify your API key and the currencies you are interested in. Here are examples of how to structure your requests:
+## Prerequisites
 
-- For fetching the latest exchange rates:
+Before starting, an API key from OpenExchangeRates is required. You can register for an API key on their [signup page](https://openexchangerates.org/signup/developer). The free plan, offering up to 1,000 requests per month, should suffice for basic needs.
 
-```json
-{ "app_id": "your_app_id" }
-```
+## Building the Plugin
 
-We can now fetch the latest exchange rates using the Extism CLI's run command:
+Create the WASM plugin by running the following command in your terminal:
+
 ```shell
-extism call plugin.wasm run --input '{ "app_id": "myappid"}' --wasi --allow-host '*'
+extism-js plugin.js -i -o plugin.wasm
 ```
 
-To convert between specific currencies:
+## Making API Requests
+
+Below are examples detailing how to structure your API requests for different operations:
+
+### 1) Fetching Latest Exchange Rates | [Reference](https://docs.openexchangerates.org/reference/latest-json)
+
+- **Request JSON:**
 
 ```json
-{
-"app_id": "your_app_id",
-"base": "USD",
-"symbols": "EUR,GBP"
+{ 
+    "app_id": "YOUR_APP_ID"
 }
 ```
 
-Command to convert between specific currencies use the command (Note: currently available for clients on the Unlimited plan.):
-```shell
-extism call plugin.wasm run --input '{"requestType": "convert", "app_id": "YOUR_APP_ID", "value": 19999.95, "from": "GBP", "to": "EUR", "prettyprint": true}' --wasi --allow-host '*'
-```
-
-To fetch JSON list of all currency symbols available from the Open Exchange Rates API, along with their full names:
-
-```json
-{"requestType": "currencies"}
-```
-
-Command to fetch all currency symbols:
+- **Extism CLI Command:**
 
 ```shell
-extism call plugin.wasm run --input '{"requestType": "currencies"}' --wasi --allow-host '*'
+extism call plugin.wasm run --input '{ "app_id": "YOUR_APP_ID" }' --wasi --allow-host '*'
 ```
 
-To get historical exchange rates for any date available from the Open Exchange Rates API, currently going back to 1st January 1999
+### 2) Retrieving Historical Exchange Rates (Available since 1999) | [Reference](https://docs.openexchangerates.org/reference/historical-json)
+
+- **Request JSON:**
 
 ```json
 {
@@ -59,22 +51,111 @@ To get historical exchange rates for any date available from the Open Exchange R
   "prettyprint": false
 }
 ```
-Command to get historical exchange rates:
+
+- **Extism CLI Command:**
+
 ```shell
 extism call plugin.wasm run --input '{"requestType": "historical", "app_id": "YOUR_APP_ID", "date": "2001-02-16", "base": "USD", "symbols": "EUR,GBP", "show_alternative": false, "prettyprint": false}' --wasi --allow-host '*'
 ```
 
-Building the Plugin
-To create the WASM plugin, execute the following command:
+### 3) Fetching Currency Symbols | [Reference](https://docs.openexchangerates.org/reference/currencies-json)
+
+- **Request JSON:**
+
+```json
+{
+    "requestType": "currencies"
+}
+```
+
+- **Extism CLI Command:**
 
 ```shell
-extism-js plugin.js -i -o plugin.wasm
+extism call plugin.wasm run --input '{"requestType": "currencies"}' --wasi --allow-host '*'
 ```
-Testing with CLI
-After building the plugin, you can test it using the Extism CLI with the following command:
 
+### 4) Historical exchange rates for a given time period (Enterprise and Unlimited plans) | [Reference](https://docs.openexchangerates.org/reference/time-series-json)
+
+- **Request JSON:**
+
+```json
+{
+  "requestType": "time-series",
+  "app_id": "YOUR_APP_ID",
+  "start": "2012-01-01",
+  "end": "2012-01-31",
+  "base": "AUD",
+  "symbols": "BTC,EUR,HKD",
+  "prettyprint": 1
+}
+```
+- **Extism CLI Command:**
 
 ```shell
-extism call plugin.wasm run --input '{ "apikey": "your_api_key", "base": "USD", "symbols": "EUR,GBP" }' --wasi --allow-host '*'
+extism call plugin.wasm run --input '{"requestType": "time-series","app_id": "YOUR_APP_ID","start": "2012-01-01","end": "2012-01-31","base": "AUD","symbols": "BTC,EUR,HKD","prettyprint": 1}' --wasi --allow-host '*'
 ```
-Replace your_api_key with your actual OpenExchangeRates API key, and adjust the base and symbols parameters as needed to fit your currency conversion requirements. This setup will allow you to quickly and efficiently integrate real-time currency data into your agents.
+
+### 5) Currency Conversion (Unlimited plan) | [Reference](https://docs.openexchangerates.org/reference/convert)
+
+- **Request JSON (Unlimited plan required):**
+
+```json
+{
+    "requestType": "convert", 
+    "app_id": "YOUR_APP_ID", 
+    "value": 19999.95, 
+    "from": "GBP", 
+    "to": "EUR", 
+    "prettyprint": 1
+}
+```
+
+- **Extism CLI Command:**
+
+```shell
+extism call plugin.wasm run --input '{"requestType": "convert", "app_id": "YOUR_APP_ID", "value": 19999.95, "from": "GBP", "to": "EUR", "prettyprint": true}' --wasi --allow-host '*'
+```
+
+### 6) Get historical Open, High Low, Close (OHLC) and Average exchange rates for a given time period, ranging from 1 month to 1 minute (VIP Platinum) | [Reference](https://docs.openexchangerates.org/reference/ohlc-json)
+
+- **Request JSON:**
+
+```json
+{
+  "requestType": "ohlc",
+  "app_id": "YOUR_APP_ID",
+  "start_time": "2017-07-17T11:00:00Z",
+  "period": "30m",
+  "base": "USD",
+  "symbols": "GBP,EUR,HKD",
+  "prettyprint": 1
+}
+```
+
+- **Extism CLI Command:**
+
+```shell
+extism call plugin.wasm run --input '{"requestType": "ohlc", "app_id": "YOUR_APP_ID", "start_time": "2017-07-17T11:00:00Z", "period": "30m", "base": "USD", "symbols": "GBP,EUR,HKD", "prettyprint": 1}' --wasi --allow-host '*'
+```
+
+### 7) To view basic plan information and your usage statistics for the Open Exchange Rates App ID | [Reference](https://docs.openexchangerates.org/reference/usage-json)
+
+- **Request JSON:**
+
+```json
+{
+  "requestType": "usage",
+  "app_id": "YOUR_APP_ID",
+  "prettyprint": true
+}
+```
+
+- **Extism CLI Command:**
+
+```shell
+extism call plugin.wasm run --input '{"requestType": "usage", "app_id": "YOUR_APP_ID", "prettyprint": true}' --wasi --allow-host '*'
+```
+
+## Testing with CLI
+
+Test the plugin using the Extism CLI, ensuring to replace `YOUR_APP_ID` with your actual OpenExchangeRates API key.
