@@ -10,7 +10,7 @@ function run() {
 
     // Determine the type of request and construct the appropriate API URL
     if (!inputData.requestType && inputData.app_id){
-      apiUrl += `latest?app_id=${inputData.app_id}`;
+      apiUrl += `latest.json?app_id=${inputData.app_id}`;
     }
     else{
     switch (inputData.requestType) {
