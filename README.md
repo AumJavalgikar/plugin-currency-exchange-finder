@@ -13,10 +13,55 @@ To make a request to the OpenExchangeRates API, you need to specify your API key
 ```json
 { "apikey": "your_api_key" }
 ```
+
+We can now fetch the latest exchange rates using the Extism CLI's run command:
+```shell
+extism call plugin.wasm run --input '{ "app_id": "myappid"}' --wasi --allow-host '*'
+```
+
 To convert between specific currencies:
 
 ```json
-{ "apikey": "your_api_key", "base": "USD", "symbols": "EUR,GBP" }
+{
+"apikey": "your_api_key",
+"base": "USD",
+"symbols": "EUR,GBP"
+}
+```
+
+Command to convert between specific currencies use the command (Note: currently available for clients on the Unlimited plan.):
+```shell
+extism call plugin.wasm run --input '{"requestType": "convert", "app_id": "YOUR_APP_ID", "value": 19999.95, "from": "GBP", "to": "EUR", "prettyprint": true}' --wasi --allow-host '*'
+```
+
+To fetch JSON list of all currency symbols available from the Open Exchange Rates API, along with their full names:
+
+```json
+{"requestType": "currencies"}
+```
+
+Command to fetch all currency symbols:
+
+```shell
+extism call plugin.wasm run --input '{"requestType": "currencies"}' --wasi --allow-host '*'
+```
+
+To get historical exchange rates for any date available from the Open Exchange Rates API, currently going back to 1st January 1999
+
+```json
+{
+  "requestType": "historical",
+  "app_id": "YOUR_APP_ID",
+  "date": "2001-02-16",
+  "base": "USD",
+  "symbols": "EUR,GBP",
+  "show_alternative": false,
+  "prettyprint": false
+}
+```
+Command to get historical exchange rates:
+```shell
+extism call plugin.wasm run --input '{"requestType": "historical", "app_id": "YOUR_APP_ID", "date": "2001-02-16", "base": "USD", "symbols": "EUR,GBP", "show_alternative": false, "prettyprint": false}' --wasi --allow-host '*'
 ```
 
 Building the Plugin
