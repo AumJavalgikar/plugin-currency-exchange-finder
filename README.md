@@ -11,7 +11,7 @@ To make a request to the OpenExchangeRates API, you need to specify your API key
 - For fetching the latest exchange rates:
 
 ```json
-{ "apikey": "your_api_key" }
+{ "app_id": "your_app_id" }
 ```
 
 We can now fetch the latest exchange rates using the Extism CLI's run command:
@@ -23,7 +23,7 @@ To convert between specific currencies:
 
 ```json
 {
-"apikey": "your_api_key",
+"app_id": "your_app_id",
 "base": "USD",
 "symbols": "EUR,GBP"
 }
