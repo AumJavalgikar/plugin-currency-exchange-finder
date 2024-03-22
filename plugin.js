@@ -12,6 +12,7 @@ function run() {
     if (!inputData.requestType && inputData.app_id){
       `latest?app_id=${inputData.app_id}`;
     }
+    else{
     switch (inputData.requestType) {
       case 'currencies':
         apiUrl += 'currencies.json';
@@ -52,7 +53,7 @@ function run() {
         Host.outputString("Invalid request type.");
         throw new Error("Invalid request type.");
     }
-
+    }
     // Define the request object for all endpoints
     const request = {
       method: "GET",
