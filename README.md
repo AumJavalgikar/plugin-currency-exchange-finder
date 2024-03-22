@@ -47,15 +47,15 @@ extism call plugin.wasm run --input '{ "app_id": "YOUR_APP_ID" }' --wasi --allow
   "date": "2001-02-16",
   "base": "USD",
   "symbols": "EUR,GBP",
-  "show_alternative": false,
-  "prettyprint": false
+  "show_alternative": 0,
+  "prettyprint": 0
 }
 ```
 
 - **Extism CLI Command:**
 
 ```shell
-extism call plugin.wasm run --input '{"requestType": "historical", "app_id": "YOUR_APP_ID", "date": "2001-02-16", "base": "USD", "symbols": "EUR,GBP", "show_alternative": false, "prettyprint": false}' --wasi --allow-host '*'
+extism call plugin.wasm run --input '{"requestType": "historical", "app_id": "YOUR_APP_ID", "date": "2001-02-16", "base": "USD", "symbols": "EUR,GBP", "show_alternative": 0, "prettyprint": 0}' --wasi --allow-host '*'
 ```
 
 ### 3) Fetching Currency Symbols | [Reference](https://docs.openexchangerates.org/reference/currencies-json)
@@ -113,7 +113,7 @@ extism call plugin.wasm run --input '{"requestType": "time-series","app_id": "YO
 - **Extism CLI Command:**
 
 ```shell
-extism call plugin.wasm run --input '{"requestType": "convert", "app_id": "YOUR_APP_ID", "value": 19999.95, "from": "GBP", "to": "EUR", "prettyprint": true}' --wasi --allow-host '*'
+extism call plugin.wasm run --input '{"requestType": "convert", "app_id": "YOUR_APP_ID", "value": 19999.95, "from": "GBP", "to": "EUR", "prettyprint": 1}' --wasi --allow-host '*'
 ```
 
 ### 6) Get historical Open, High Low, Close (OHLC) and Average exchange rates for a given time period, ranging from 1 month to 1 minute (VIP Platinum) | [Reference](https://docs.openexchangerates.org/reference/ohlc-json)
@@ -146,14 +146,14 @@ extism call plugin.wasm run --input '{"requestType": "ohlc", "app_id": "YOUR_APP
 {
   "requestType": "usage",
   "app_id": "YOUR_APP_ID",
-  "prettyprint": true
+  "prettyprint": 1
 }
 ```
 
 - **Extism CLI Command:**
 
 ```shell
-extism call plugin.wasm run --input '{"requestType": "usage", "app_id": "YOUR_APP_ID", "prettyprint": true}' --wasi --allow-host '*'
+extism call plugin.wasm run --input '{"requestType": "usage", "app_id": "YOUR_APP_ID", "prettyprint": 1}' --wasi --allow-host '*'
 ```
 
 ## Testing with CLI
