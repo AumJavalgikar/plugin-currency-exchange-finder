@@ -67,6 +67,7 @@ function run() {
           apiUrl += `&prettyprint=${inputData.prettyprint}`;
         }
         break;
+
       case 'latest':
       default:
         apiUrl += `latest.json?app_id=${inputData.app_id}`;
@@ -79,6 +80,7 @@ function run() {
         if (inputData.prettyprint) apiUrl +=`&prettyprint=${inputData.prettyprint}`;
         if (inputData.show_alternative) apiUrl +=`&show_alternative=${inputData.show_alternative}`;
     }
+    
     // Define the request object for all endpoints
     const request = {
       method: "GET",
