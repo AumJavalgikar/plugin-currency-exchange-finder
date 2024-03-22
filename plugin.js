@@ -13,6 +13,18 @@ function run() {
       case 'currencies':
         apiUrl += 'currencies.json';
         break;
+      
+        case 'historical':
+        if (!inputData.date) {
+          Host.outputString("Date is required for historical requests.");
+          throw new Error("Date is required for historical requests.");
+        }
+        apiUrl += `historical/${inputData.date}.json`;
+        if (inputData.base) apiUrl += `&base=${inputData.base}`;
+        if (inputData.symbols) apiUrl += `&symbols=${inputData.symbols}`;
+        if (inputData.show_alternative) apiUrl += `&show_alternative=${inputData.show_alternative}`;
+        if (inputData.prettyprint) apiUrl += `&prettyprint=${inputData.prettyprint}`;
+        break;
 
       case 'time-series':
         if (!inputData.app_id || !inputData.start || !inputData.end) {
