@@ -6,37 +6,51 @@ function run() {
   try {
     const inputData = JSON.parse(input);
 
-    if (!inputData.app_id) {
-      Host.outputString("App ID is required.");
-      throw new Error("App ID is required.");
-    }
-
-    // Construct the base URL and parameters
     let apiUrl = 'https://openexchangerates.org/api/';
-    const params = [];
 
-    // Add the app_id to the parameters list
-    params.push(`app_id=${inputData.app_id}`);
+    // Determine the type of request and construct the appropriate API URL
+    switch (inputData.requestType) {
+      case 'currencies':
+        apiUrl += 'currencies.json';
+        break;
 
-    // Check if a date is provided for historical data
-    if (inputData.date) {
-      apiUrl += `historical/${inputData.date}.json`;
-    } else {
-      apiUrl += 'latest.json';
+      case 'time-series':
+        if (!inputData.app_id || !inputData.start || !inputData.end) {
+          Host.outputString("App ID, start date, and end date are required for time series requests.");
+          throw new Error("App ID, start date, and end date are required for time series requests.");
+        }
+        apiUrl += `time-series.json?app_id=${inputData.app_id}&start=${inputData.start}&end=${inputData.end}`;
+        if (inputData.base) apiUrl += `&base=${inputData.base}`;
+        if (inputData.symbols) apiUrl += `&symbols=${inputData.symbols}`;
+        if (inputData.prettyprint) apiUrl += `&prettyprint=${inputData.prettyprint}`;
+        break;
+
+      case 'convert':
+        if (!inputData.app_id || !inputData.value || !inputData.from || !inputData.to) {
+          Host.outputString("App ID, value, from currency, and to currency are required for conversion requests.");
+          throw new Error("App ID, value, from currency, and to currency are required for conversion requests.");
+        }
+        apiUrl += `convert/${inputData.value}/${inputData.from}/${inputData.to}?app_id=${inputData.app_id}`;
+        if (inputData.prettyprint) apiUrl += `&prettyprint=${inputData.prettyprint}`;
+        break;
+
+      case 'ohlc':
+        if (!inputData.app_id || !inputData.start_time || !inputData.period) {
+          Host.outputString("App ID, start time, and period are required for OHLC requests.");
+          throw new Error("App ID, start time, and period are required for OHLC requests.");
+        }
+        apiUrl += `ohlc.json?app_id=${inputData.app_id}&start_time=${inputData.start_time}&period=${inputData.period}`;
+        if (inputData.base) apiUrl += `&base=${inputData.base}`;
+        if (inputData.symbols) apiUrl += `&symbols=${inputData.symbols}`;
+        if (inputData.prettyprint) apiUrl += `&prettyprint=${inputData.prettyprint}`;
+        break;
+
+      default:
+        Host.outputString("Invalid request type.");
+        throw new Error("Invalid request type.");
     }
 
-    // Optional parameters for the latest endpoint
-    if (!inputData.date) {
-      if (inputData.base) params.push(`base=${inputData.base}`);
-      if (inputData.symbols) params.push(`symbols=${inputData.symbols}`);
-      if (inputData.prettyprint) params.push(`prettyprint=${inputData.prettyprint}`);
-      if (inputData.show_alternative) params.push(`show_alternative=${inputData.show_alternative}`);
-    }
-
-    // Finalize the API URL
-    apiUrl += '?' + params.join('&');
-
-    // Define the request object
+    // Define the request object for all endpoints
     const request = {
       method: "GET",
       url: apiUrl,
