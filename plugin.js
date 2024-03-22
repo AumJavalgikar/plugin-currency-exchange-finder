@@ -57,11 +57,15 @@ function run() {
         break;
       case 'latest':
       default:
-        apiUrl += 'latest.json';
-        if (inputData.base) params.push(`base=${inputData.base}`);
-        if (inputData.symbols) params.push(`symbols=${inputData.symbols}`);
-        if (inputData.prettyprint) params.push(`prettyprint=${inputData.prettyprint}`);
-        if (inputData.show_alternative) params.push(`show_alternative=${inputData.show_alternative}`);
+        apiUrl += `latest.json?app_id=${inputData.app_id}`;
+        if (!inputData.app_id) {
+          Host.outputString("App ID is required for latest exchange rate requests.");
+          throw new Error("App ID is required for latest exchange rate requests.");
+        }
+        if (inputData.base) apiUrl += `&base=${inputData.base}`;
+        if (inputData.symbols) apiUrl +=`&symbols=${inputData.symbols}`;
+        if (inputData.prettyprint) apiUrl +=`&prettyprint=${inputData.prettyprint}`;
+        if (inputData.show_alternative) apiUrl +=`&show_alternative=${inputData.show_alternative}`;
     }
     // Define the request object for all endpoints
     const request = {
